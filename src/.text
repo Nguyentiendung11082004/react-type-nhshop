@@ -1,0 +1,459 @@
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { getAllProduct } from "../../../services/product";
+import { Iproduct } from "../../../commons/interfaces/product";
+import { useState } from "react";
+import instance from "../../../config/axios";
+
+const ShopPage = () => {
+  const { data: allProducts } = useQuery({
+    queryKey: ["PRODUCT_KEY"],
+    queryFn: getAllProduct,
+  });
+
+  const [searchResult, setSearchResult] = useState<Iproduct[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [productsPerPage] = useState<number>(6);
+
+  const handleSearch = async (e: any) => {
+    const result = e.target.value;
+    try {
+      const { data } = await instance.get(`/products?q=${result}`);
+      setSearchResult(data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = searchResult.length === 0 ? allProducts?.data : searchResult;
+  const currentProductsToDisplay = currentProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  return (
+    <>
+      <div className="nav">
+        <form className="input-group input-search w-full container">
+          <div className="form-outline w-full" data-mdb-input-init>
+            <input
+              type="search"
+              id="form1"
+              onChange={handleSearch}
+              className="form-control w-full"
+              placeholder="Nhập sản phẩm bạn muốn tìm"
+            />
+          </div>
+        </form>
+      </div>
+
+      <section className="news">
+        <div className="container">
+          <div className="section-heading">
+            <h2 className="section-heading__title">New</h2>
+          </div>
+          <div className="section-body">
+            <div className="product-list">
+              {currentProductsToDisplay.map((product: Iproduct, key: number) => {
+                return (
+                  <div className="product-item" key={key}>
+                    <div className="product-image">
+                      <img
+                        src={String(product?.image)}
+                        alt=""
+                        className="product__thumbnail"
+                      />
+                      <span className="product-sale">{product?.discount}</span>
+                    </div>
+                    <div className="product-info">
+                      <h3 className="product__name">
+                        <a href="" className="product__link">
+                          {product.name}
+                        </a>
+                      </h3>
+                      <a href="" className="product__category">
+                        Stylish cafe chair
+                      </a>
+                      <div className="product-price">
+                        <span className="product-price__new">
+                          {product?.price -
+                            product?.price * (product?.discount / 100)}
+                        </span>
+                        <span className="product-price__old">
+                          {product?.price}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="product-actions">
+                      <Link
+                        to={`products/${product.id}`}
+                        className="btn product-action__quickview"
+                      >
+                        <button className="btn product-action__quickview">
+                          Quick view
+                        </button>
+                      </Link>
+                      <button className="btn product-action__addtocart">
+                        Add To Cart
+                      </button>
+                      <div className="product-actions-more">
+                        <span className="product-action__share">
+                          <img src="src/assets/icons/Vector.svg" alt="" />
+                          Share
+                        </span>
+                        <span className="product-action__compare">
+                          <img src="src/assets/icons/Vector2.svg" alt="" />
+                        </span>
+                        <span className="product-action__like">
+                          <img src="src/assets/icons/Vector3.svg" alt="" />
+                          Like
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pagination">
+        <div className="container">
+          <div className="pagination__inner__btn">
+            {Array.from(
+              { length: Math.ceil((currentProducts ? currentProducts.length : 0) / productsPerPage) },
+              (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  className={currentPage === i + 1 ? "active" : ""}
+                >
+                  {i + 1}
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+export default ShopPage;
+
+
+
+
+import React, { useState } from 'react';
+
+const ProductList = () => {
+  const [products, setProducts] = useState([
+    'Sản phẩm 1',
+    'Sản phẩm 2',
+    'Sản phẩm 3',
+    'Sản phẩm 4',
+    'Sản phẩm 5',
+    'Sản phẩm 6',
+    'Sản phẩm 7',
+    'Sản phẩm 8'
+  ]);
+
+  const [showAll, setShowAll] = useState(false);
+
+  const handleShowMore = () => {
+    setShowAll(true);
+  };
+
+  const handleShowLess = () => {
+    setShowAll(false);
+  };
+
+  return (
+    <div>
+      {products.slice(0, showAll ? products.length : 4).map((product, index) => (
+        <div key={index}>{product}</div>
+      ))}
+      {!showAll ? (
+        <button onClick={handleShowMore}>Xem thêm</button>
+      ) : (
+        <button onClick={handleShowLess}>Thu gọn</button>
+      )}
+    </div>
+  );
+};
+
+export default ProductList;
+
+
+import Pagination from "../../../components/Pagination";
+
+
+const YourComponent: React.FC = () => {
+  // Assume totalPages is calculated or received from parent component
+  const totalPages = 5;
+
+  return (
+    <div>
+      <h1>Your Component</h1>
+      <Pagination totalPages={totalPages} />
+    </div>
+  );
+};
+
+export default YourComponent;
+
+
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getAllProduct } from '../../../services/product';
+import { Iproduct } from '../../../commons/interfaces/product';
+import instance from '../../../config/axios';
+import Pagination from '../../../components/Pagination';
+
+const ShopPage = () => {
+  const { data: products } = useQuery({
+    queryKey: ['PRODUCT_KEY'],
+    queryFn: getAllProduct,
+  });
+  const [searchResult, setSearchResult] = useState<Iproduct[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(10);
+
+  const handleSearch = async (e: any) => {
+    const result = e.target.value;
+    try {
+      const { data } = await instance.get(`/products?q=${result}`);
+      setSearchResult(data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const renderProduct = (product: Iproduct, key: number) => {
+    return (
+      <div className="product-item" key={key}>
+        <div className="product-image">
+          <img
+            src={String(product?.image)}
+            alt=""
+            className="product__thumbnail"
+          />
+          <span className="product-sale">{product?.discount}</span>
+        </div>
+        <div className="product-info">
+          <h3 className="product__name">
+            <a href="" className="product__link">
+              {product.name}
+            </a>
+          </h3>
+          <a href="" className="product__category">
+            Stylish cafe chair
+          </a>
+          <div className="product-price">
+            <span className="product-price__new">
+              {product?.price - product?.price * (product?.discount / 100)}
+            </span>
+            <span className="product-price__old">{product?.price}</span>
+          </div>
+        </div>
+        <div className="product-actions">
+          <Link
+            to={`/products/${product.id}`}
+            className="btn product-action__quickview"
+          >
+            <button className="btn product-action__quickview">Quick view</button>
+          </Link>
+          <button className="btn product-action__addtocart">Add To Cart</button>
+          <div className="product-actions-more">
+            <span className="product-action__share">
+              <img src="src/assets/icons/Vector.svg" alt="" />
+              Share
+            </span>
+            <span className="product-action__compare">
+              <img src="src/assets/icons/Vector2.svg" alt="" />
+            </span>
+            <span className="product-action__like">
+              <img src="src/assets/icons/Vector3.svg" alt="" />
+              Like
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const getDisplayedProducts = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    if (searchResult.length > 0) {
+      return searchResult.slice(startIndex, endIndex);
+    }
+    return products?.slice(startIndex, endIndex) || [];
+  };
+
+  return (
+    <>
+      <div className="nav">
+        <form className="input-group input-search w-full container">
+          <div className="form-outline w-full" data-mdb-input-init>
+            <input
+              type="search"
+              id="form1"
+              onChange={handleSearch}
+              className="form-control w-full"
+              placeholder="Nhập sản phẩm bạn muốn tìm"
+            />
+          </div>
+        </form>
+      </div>
+      <section className="news">
+        <div className="container">
+          <div className="section-heading">
+            <h2 className="section-heading__title">New</h2>
+          </div>
+          <div className="section-body">
+            <div className="product-list">
+              {getDisplayedProducts()?.map((product: Iproduct, key: number) =>
+                renderProduct(product, key)
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="pagination">
+        <div className="container">
+          <div className="pagination__inner__btn">
+            <Pagination
+              totalPages={Math.ceil(
+                (searchResult.length > 0 ? searchResult.length : (products || []).length) /
+                  itemsPerPage
+              )}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+export default ShopPage;
+
+import React, { useEffect, useState } from "react";
+import instance from "../../../config/axios";
+
+type Props = {};
+
+const CartPage = (props: Props) => {
+  const [item, setItem] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await instance.get(`/orderitem`);
+        setItem(data);
+        let totalPrice = 0;
+        data.forEach((prices: any) => {
+          totalPrice += Number(prices.qty) * Number(prices.price);
+        });
+        setTotal(totalPrice);
+      } catch (error) {
+        console.log("error", error);
+      }
+    })();
+  }, []);
+
+  return (
+    <div>
+      <div>
+        <section className="banner">
+          <img src="assets/icons/banner.png" className="banner__img" />
+          <h2 className="banner__shop">Cart</h2>
+          <p className="banner__shop__heading">
+            Home{" "}
+            <img
+              className="banner__shop__icon"
+              src="src/assets/icons/dashicons_arrow-down-alt2.png"
+            />{" "}
+            Cart
+          </p>
+        </section>
+        {/*End .banner*/}
+        <section className="cart">
+          <div className="container">
+            <div className="cart__inner">
+              <div className="cart__inner__info">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name Product</th>
+
+                      <th scope="col">Price</th>
+                      <th scope="col">Quanlity</th>
+                      <th scope="col">Image</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {item?.map((cartItem: any, index: number) => {
+                      return (
+                        <tr key={cartItem.id}>
+                          <th>{index + 1}</th>
+                          <th>{cartItem.name}</th>
+                          <th>{cartItem.price}</th>
+                          <th>
+                            <p>{cartItem.qty}</p>
+                          </th>
+                          <th>
+                            <img
+                              style={{ height: "40px", margin: "0 auto" }}
+                              src={String(cartItem.image)}
+                            />
+                          </th>
+                          <th>
+                            <button className="btn btn-danger">Delete</button>
+                          </th>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div className="cart__inner__total">
+                <div className="cart__inner__total__heading">
+                  <h2>Cart Totals</h2>
+                </div>
+                <div className="cart__inner__total__content">
+                  <div>
+                    <p className="title">Subtotal</p>
+                    <p>25.000.000 d</p>
+                  </div>
+                  <div>
+                    <p className="title">Total </p>
+                    <p className="total-money">{total.toLocaleString()} d</p>
+                  </div>
+                </div>
+                <div className="cart__total__btn" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default CartPage;
