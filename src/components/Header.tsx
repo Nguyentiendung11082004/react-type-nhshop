@@ -25,10 +25,10 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   const toggleOverlay = () => {
-    setIsOverlayOpen(!isOverlayOpen)
-  }
+    setIsOverlayOpen(!isOverlayOpen);
+  };
   const handleLinkClick = () => {
-    setIsMenuOpen(!isMenuOpen);   
+    setIsMenuOpen(!isMenuOpen);
   };
   return (
     <>
@@ -38,38 +38,86 @@ const Header = () => {
             <Link to="/" className="header__logo">
               <img src="/src/assets/icons/logo.png" alt="Logo" />
             </Link>
-            <div className="button-mobile" onClick={() => {toggleMenu(); toggleOverlay();handleLinkClick();}}>
+            <div
+              className="button-mobile"
+              onClick={() => {
+                toggleMenu();
+                toggleOverlay();
+                handleLinkClick();
+              }}
+            >
               <button>=</button>
             </div>
             <div className={`menu-mobile ${isMenuOpen ? "open" : ""} `}>
-              <button className="menu-mobile__close" onClick={() => {toggleMenu();toggleOverlay();handleLinkClick() }}>
+              <button
+                className="menu-mobile__close"
+                onClick={() => {
+                  toggleMenu();
+                  toggleOverlay();
+                  handleLinkClick();
+                }}
+              >
                 Close
               </button>
               <ul className="main-menu__list">
                 <li className="main-menu__item">
-                  <Link to="/" className="main-menu__link" onClick={()=>{ toggleOverlay();handleLinkClick()}}>
+                  <Link
+                    to="/"
+                    className="main-menu__link"
+                    onClick={() => {
+                      toggleOverlay();
+                      handleLinkClick();
+                    }}
+                  >
                     Home
                   </Link>
                 </li>
                 <li className="main-menu__item">
-                  <Link to="/shop" className="main-menu__link" onClick={()=>{ toggleOverlay();handleLinkClick()}}>
+                  <Link
+                    to="/shop"
+                    className="main-menu__link"
+                    onClick={() => {
+                      toggleOverlay();
+                      handleLinkClick();
+                    }}
+                  >
                     Shop
                   </Link>
                 </li>
                 <li className="main-menu__item">
-                  <Link to="/about" className="main-menu__link" onClick={()=>{ toggleOverlay();handleLinkClick()}} >
+                  <Link
+                    to="/about"
+                    className="main-menu__link"
+                    onClick={() => {
+                      toggleOverlay();
+                      handleLinkClick();
+                    }}
+                  >
                     About
                   </Link>
                 </li>
                 <li className="main-menu__item">
-                  <Link to="contact" className="main-menu__link"  onClick={()=>{ toggleOverlay();handleLinkClick()}}>
+                  <Link
+                    to="contact"
+                    className="main-menu__link"
+                    onClick={() => {
+                      toggleOverlay();
+                      handleLinkClick();
+                    }}
+                  >
                     Contact
                   </Link>
                 </li>
               </ul>
               <div className="header-items ">
                 <div className="header-item">
-                  <Link to={`/login`} onClick={()=>{ toggleOverlay();handleLinkClick()}} >
+                  <Link
+                    to={`/login`}
+                    onClick={() => {
+                      toggleOverlay();
+                      handleLinkClick();
+                    }}
+                  >
                     <span>
                       <img src="/src/assets/icons/1.svg" alt="User icon" />
                     </span>
@@ -89,7 +137,13 @@ const Header = () => {
                   <p className="qty">
                     <UseOrderItem />
                   </p>
-                  <Link to="/cart" onClick={()=>{ toggleOverlay();handleLinkClick()}}>
+                  <Link
+                    to="/cart"
+                    onClick={() => {
+                      toggleOverlay();
+                      handleLinkClick();
+                    }}
+                  >
                     <span>
                       <img src="/src/assets/icons/4.svg" alt="Cart icon" />
                     </span>
@@ -97,7 +151,13 @@ const Header = () => {
                 </div>
               </div>
             </div>
-            <div className={`overlay ${isOverlayOpen ? "open" : ""}`} onClick={() => {toggleMenu(); toggleOverlay();}}></div>
+            <div
+              className={`overlay ${isOverlayOpen ? "open" : ""}`}
+              onClick={() => {
+                toggleMenu();
+                toggleOverlay();
+              }}
+            ></div>
             <nav className="main-menu">
               <ul className="main-menu__list">
                 <li className="main-menu__item">

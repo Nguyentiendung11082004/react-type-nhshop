@@ -743,14 +743,14 @@
       "name": "Xiaomi Mi 11",
       "price": 13200000,
       "image": "https://picsum.photos/472/490",
-      "qty": 8,
+      "qty": 1,
       "id": 2
     },
     {
       "name": "Oppo Key P40 Pro",
       "price": 15000000,
       "image": "https://picsum.photos/472/490",
-      "qty": 8,
+      "qty": 2,
       "id": 3
     }
   ]
