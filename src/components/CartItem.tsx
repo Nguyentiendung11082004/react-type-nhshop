@@ -2,6 +2,7 @@ import { useState } from "react";
 import instance from "../config/axios";
 
 export const useCartItem = () => {
+
   const addItem = async (
     name: string,
     price: number,
